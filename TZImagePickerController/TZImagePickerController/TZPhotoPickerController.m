@@ -74,7 +74,7 @@ static CGFloat itemMargin = 5;
         //删除
         _cuBottomToolBar.cuTZPhotoPickerToolBarImgDeleteAction = ^{
             //刷新底部状态
-            [weakSelf refreshBottomToolBarStatus];
+            [weakSelf refreshCUBottomToolBarStatus];
             [weakSelf.collectionView reloadData];
         };
         //预览
