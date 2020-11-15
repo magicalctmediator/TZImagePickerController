@@ -72,6 +72,9 @@
 		9F763A771FA0741D00D9E526 /* TZImageCropManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DC84D081DF5358500A107A9 /* TZImageCropManager.h */; };
 		9F763A781FA0741D00D9E526 /* TZLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 902938D61EE2D02C000F2F8F /* TZLocationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9F763A791FA0741D00D9E526 /* UIView+Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 90EBF5D41C2E298000CB9BCC /* UIView+Layout.h */; };
+		B4B6FDB2256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B6FDB0256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m */; };
+		B4B6FDB3256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B6FDB0256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m */; };
+		B4B6FDB4256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.h in Headers */ = {isa = PBXBuildFile; fileRef = B4B6FDB1256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -182,6 +185,8 @@
 		90EBF5D51C2E298000CB9BCC /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
 		9F763A421FA071CF00D9E526 /* TZImagePickerController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TZImagePickerController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F763A451FA071D000D9E526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B4B6FDB0256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CUTZPhotoPickerBottomToolBar.m; sourceTree = "<group>"; };
+		B4B6FDB1256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CUTZPhotoPickerBottomToolBar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -304,6 +309,8 @@
 		900EEFF51C2BBF7600EA709B /* TZImagePickerController */ = {
 			isa = PBXGroup;
 			children = (
+				B4B6FDB1256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.h */,
+				B4B6FDB0256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m */,
 				900EEFF61C2BBF9500EA709B /* TZImagePickerController.h */,
 				900EEFF71C2BBF9500EA709B /* TZImagePickerController.m */,
 				900EEFFC1C2BD58B00EA709B /* TZPhotoPickerController.h */,
@@ -392,6 +399,7 @@
 				9F763A781FA0741D00D9E526 /* TZLocationManager.h in Headers */,
 				9F763A711FA0741D00D9E526 /* TZPhotoPreviewController.h in Headers */,
 				9F763A721FA0741D00D9E526 /* TZPhotoPreviewCell.h in Headers */,
+				B4B6FDB4256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.h in Headers */,
 				9F763A701FA0741D00D9E526 /* TZAssetCell.h in Headers */,
 				9F763A791FA0741D00D9E526 /* UIView+Layout.h in Headers */,
 				9F763A6F1FA0741D00D9E526 /* TZPhotoPickerController.h in Headers */,
@@ -487,7 +495,7 @@
 				TargetAttributes = {
 					900E657B1C2BB8D5003D9A9E = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = LTFQDC2QVX;
+						DevelopmentTeam = FY5A6H87P6;
 						ProvisioningStyle = Automatic;
 					};
 					900E65941C2BB8D5003D9A9E = {
@@ -588,6 +596,7 @@
 				901F2295215CABD600F604ED /* FLAnimatedImage.m in Sources */,
 				900E65841C2BB8D5003D9A9E /* AppDelegate.m in Sources */,
 				901F2296215CABD600F604ED /* FLAnimatedImageView.m in Sources */,
+				B4B6FDB2256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m in Sources */,
 				9019FD8D21EC25D7009ADEAE /* TZImageUploadOperation.m in Sources */,
 				900E65811C2BB8D5003D9A9E /* main.m in Sources */,
 				900EF0121C2C107400EA709B /* TZPhotoPreviewController.m in Sources */,
@@ -634,6 +643,7 @@
 				9F763A661FA072E500D9E526 /* TZLocationManager.m in Sources */,
 				9F763A681FA072E500D9E526 /* UIView+Layout.m in Sources */,
 				9F763A6A1FA072E500D9E526 /* NSBundle+TZImagePicker.m in Sources */,
+				B4B6FDB3256136AE0061E872 /* CUTZPhotoPickerBottomToolBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -694,6 +704,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -723,6 +734,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -740,6 +752,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -748,6 +761,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -787,6 +801,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -796,10 +812,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = FY5A6H87P6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TZImagePickerController",
@@ -808,7 +824,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = tanzhenios2019.TZImagePickerController.www;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cu.imagepicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -820,10 +837,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = FY5A6H87P6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TZImagePickerController",
@@ -832,7 +849,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.5.2;
-				PRODUCT_BUNDLE_IDENTIFIER = tanzhenios2019.TZImagePickerController.www;
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cu.imagepicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -19,6 +19,8 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "TZImageRequestOperation.h"
 
+#import "CUTZPhotoPickerBottomToolBar.h"
+
 @interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, PHPhotoLibraryChangeObserver> {
     NSMutableArray *_models;
     
@@ -46,6 +48,13 @@
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 @property (nonatomic, assign) BOOL isSavingMedia;
 @property (nonatomic, assign) BOOL isFetchingMedia;
+/*********************** CU - G - 0.0.1 *************************/
+@property (nonatomic, strong) CUTZPhotoPickerBottomToolBar * cuBottomToolBar;
+@property (nonatomic, assign) CGFloat  toolBarHeight;
+@property (nonatomic, assign) CGFloat  collectionViewHeight;
+@property (nonatomic, assign) CGFloat  toolBarTop;
+
+
 @end
 
 static CGSize AssetGridThumbnailSize;
@@ -53,6 +62,105 @@ static CGFloat itemMargin = 5;
 
 @implementation TZPhotoPickerController
 
+/*********************** CU - G - 0.0.1 *************************/
+- (CUTZPhotoPickerBottomToolBar *)cuBottomToolBar{
+    if(!_cuBottomToolBar){
+        _cuBottomToolBar = [[CUTZPhotoPickerBottomToolBar alloc] initWithFrame:CGRectZero];
+        TZImagePickerController * tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+        _cuBottomToolBar.tzImagePickerController = tzImagePickerVc;
+        _cuBottomToolBar.backgroundColor = tzImagePickerVc.cu_BottomBarColor?tzImagePickerVc.cu_BottomBarColor:UIColor.blackColor;
+        _cuBottomToolBar.showImgTableView.backgroundColor = tzImagePickerVc.cu_BottomBarColor?tzImagePickerVc.cu_BottomBarColor:UIColor.blackColor;
+        __weak typeof(self)weakSelf = self;
+        //删除
+        _cuBottomToolBar.cuTZPhotoPickerToolBarImgDeleteAction = ^{
+            //刷新底部状态
+            [weakSelf refreshBottomToolBarStatus];
+            [weakSelf.collectionView reloadData];
+        };
+        //预览
+        _cuBottomToolBar.cuTZPhotoPickerToolBarImgDidSelectAction = ^(NSIndexPath * _Nonnull indexPath) {
+            TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)weakSelf.navigationController;
+            NSMutableArray * selectedModels = [NSMutableArray arrayWithArray:tzImagePickerVc.selectedModels];
+            TZPhotoPreviewController *photoPreviewVc = [[TZPhotoPreviewController alloc] init];
+            photoPreviewVc.currentIndex = indexPath.row;
+            photoPreviewVc.models = selectedModels;
+            [weakSelf pushPhotoPrevireViewController:photoPreviewVc needCheckSelectedModels:YES];
+        };
+        //完成
+        _cuBottomToolBar.cuTZPhotoPickerToolBarImgDoneAction = ^{
+            [weakSelf doneButtonClick];
+        };
+    }
+    return _cuBottomToolBar;
+}
+/** 设置CU-toolBar*/
+- (void)configCUBottomToolBar{
+    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+    if (!tzImagePickerVc.showSelectBtn) return;
+    [self.view addSubview:self.cuBottomToolBar];
+    //初始位置
+    self.cuBottomToolBar.frame = CGRectMake(0, self.toolBarTop+self.toolBarHeight, self.view.tz_width, self.toolBarHeight);
+}
+/** 工具栏高度*/
+- (CGFloat)toolBarHeight{
+    if (_toolBarHeight==0) {
+        _toolBarHeight = 80 + [TZCommonTools tz_safeAreaInsets].bottom;
+    }
+    return _toolBarHeight;
+}
+/** 工具栏Y*/
+- (CGFloat)toolBarTop{
+    if(_toolBarTop == 0){
+        CGFloat naviBarHeight = self.navigationController.navigationBar.tz_height;
+        if (!self.navigationController.navigationBar.isHidden) {
+            _toolBarTop = self.view.tz_height - self.toolBarHeight;
+        } else {
+            CGFloat navigationHeight = naviBarHeight + [TZCommonTools tz_statusBarHeight];
+            _toolBarTop = self.view.tz_height - self.toolBarHeight - navigationHeight;
+        }
+    }
+    return _toolBarTop;
+}
+/** 集合视图高度*/
+- (CGFloat)collectionViewHeight{
+    if (_collectionViewHeight == 0) {
+        TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+        CGFloat naviBarHeight = self.navigationController.navigationBar.tz_height;
+        BOOL isStatusBarHidden = [UIApplication sharedApplication].isStatusBarHidden;
+        CGFloat top = 0;
+        if (self.navigationController.navigationBar.isTranslucent) {
+            top = naviBarHeight;
+            if (!isStatusBarHidden) top += [TZCommonTools tz_statusBarHeight];
+            _collectionViewHeight = tzImagePickerVc.showSelectBtn ? self.view.tz_height - self.toolBarHeight - top : self.view.tz_height - top;;
+        } else {
+            _collectionViewHeight = tzImagePickerVc.showSelectBtn ? self.view.tz_height -self.toolBarHeight : self.view.tz_height;
+        }
+    }
+    return _collectionViewHeight;
+}
+- (void)refreshCUBottomToolBarStatus{
+    TZImagePickerController * tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+    __weak typeof(self)blockSelf = self;
+    if (tzImagePickerVc.selectedModels.count==0) {
+        [UIView animateWithDuration:0.5 animations:^{
+            blockSelf.cuBottomToolBar.frame = CGRectMake(0, blockSelf.toolBarTop+blockSelf.toolBarHeight, blockSelf.view.tz_width, blockSelf.toolBarHeight);
+        } completion:^(BOOL finished) {
+            [blockSelf.cuBottomToolBar.showImgTableView reloadData];
+            [blockSelf.cuBottomToolBar.doneButton setTitle:@"下一步" forState:UIControlStateNormal];
+        }];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"photo_ablum_select_0" object:nil];
+    }else{
+        [UIView animateWithDuration:0.5 animations:^{
+            blockSelf.cuBottomToolBar.frame = CGRectMake(0, blockSelf.toolBarTop, blockSelf.view.tz_width, blockSelf.toolBarHeight);
+        } completion:^(BOOL finished) {
+            [blockSelf.cuBottomToolBar.showImgTableView reloadData];
+            NSString * doneButtonStr = [NSString stringWithFormat:@"下一步(%zd)",tzImagePickerVc.selectedModels.count];
+            [blockSelf.cuBottomToolBar.doneButton setTitle:doneButtonStr forState:UIControlStateNormal];
+        }];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"photo_ablum_select_!0" object:nil];
+    }
+    
+}
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (UIImagePickerController *)imagePickerVc {
@@ -143,7 +251,13 @@ static CGFloat itemMargin = 5;
         [self checkSelectedModels];
         [self configCollectionView];
         self->_collectionView.hidden = YES;
-        [self configBottomToolBar];
+        if (tzImagePickerVc.isCUImagePicker) {
+            [self configCUBottomToolBar];
+
+        }else{
+            //原默认
+            [self configBottomToolBar];
+        }
         
         [self scrollCollectionViewToBottom];
     });
@@ -614,7 +728,11 @@ static CGFloat itemMargin = 5;
                     break;
                 }
             }
-            [strongSelf refreshBottomToolBarStatus];
+            if (tzImagePickerVc.isCUImagePicker) {
+                [strongSelf refreshCUBottomToolBarStatus];
+            }else{
+                [strongSelf refreshBottomToolBarStatus];
+            }
             if (tzImagePickerVc.showSelectedIndex || tzImagePickerVc.showPhotoCannotSelectLayer) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TZ_PHOTO_PICKER_RELOAD_NOTIFICATION" object:strongSelf.navigationController];
             }
@@ -645,7 +763,11 @@ static CGFloat itemMargin = 5;
                 if (tzImagePickerVc.showSelectedIndex || tzImagePickerVc.showPhotoCannotSelectLayer) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"TZ_PHOTO_PICKER_RELOAD_NOTIFICATION" object:strongSelf.navigationController];
                 }
-                [strongSelf refreshBottomToolBarStatus];
+                if (tzImagePickerVc.isCUImagePicker) {
+                    [strongSelf refreshCUBottomToolBarStatus];
+                }else{
+                    [strongSelf refreshBottomToolBarStatus];
+                }
                 [UIView showOscillatoryAnimationWithLayer:strongLayer type:TZOscillatoryAnimationToSmaller];
             } else {
                 NSString *title = [NSString stringWithFormat:[NSBundle tz_localizedStringForKey:@"Select a maximum of %zd photos"], tzImagePickerVc.maxImagesCount];
@@ -807,7 +929,12 @@ static CGFloat itemMargin = 5;
             [strongSelf checkSelectedModels];
         }
         [strongSelf.collectionView reloadData];
-        [strongSelf refreshBottomToolBarStatus];
+        TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)strongSelf.navigationController;
+        if (tzImagePickerVc.isCUImagePicker) {
+            [strongSelf refreshCUBottomToolBarStatus];
+        }else{
+            [strongSelf refreshBottomToolBarStatus];
+        }
     }];
     [photoPreviewVc setDoneButtonClickBlock:^(BOOL isSelectOriginalPhoto) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -943,7 +1070,11 @@ static CGFloat itemMargin = 5;
         } else {
             assetModel.isSelected = YES;
             [tzImagePickerVc addSelectedModel:assetModel];
-            [self refreshBottomToolBarStatus];
+            if (tzImagePickerVc.isCUImagePicker) {
+                [self refreshCUBottomToolBarStatus];
+            }else{
+                [self refreshBottomToolBarStatus];
+            }
         }
     }
     _collectionView.hidden = YES;

@@ -387,6 +387,9 @@
     // 设置首选语言 / Set preferred language
     // imagePickerVc.preferredLanguage = @"zh-Hans";
     
+    //设置是否CU
+     imagePickerVc.isCUImagePicker = YES;
+       
 #pragma mark - 到这里为止
     
     // You can get the photos by block, the same as by delegate.

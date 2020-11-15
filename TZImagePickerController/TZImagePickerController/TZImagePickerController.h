@@ -40,6 +40,13 @@
 /// This init method for crop photo / 用这个初始化方法以裁剪图片
 - (instancetype)initCropTypeWithAsset:(PHAsset *)asset photo:(UIImage *)photo completion:(void (^)(UIImage *cropImage,PHAsset *asset))completion;
 
+/**************************** - CU-ImagePicker - ****************************/
+// (Default is NO)
+@property (nonatomic, assign) BOOL isCUImagePicker;
+// (Default is BlackColor)
+@property (nonatomic, strong) UIColor * cu_BottomBarColor;
+/***********************************************************************/
+
 #pragma mark -
 /// Default is 9 / 默认最大可选9张图片
 @property (nonatomic, assign) NSInteger maxImagesCount;
