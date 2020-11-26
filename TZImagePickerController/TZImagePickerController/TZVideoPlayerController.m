@@ -21,6 +21,7 @@
     UIImage *_cover;
     
     UIView *_toolBar;
+    UIImageView *_playBtnImage;
     UIButton *_doneButton;
     UIProgressView *_progress;
     
@@ -42,10 +43,29 @@
     [super viewDidLoad];
     self.needShowStatusBar = ![UIApplication sharedApplication].statusBarHidden;
     self.view.backgroundColor = [UIColor blackColor];
-    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
-    if (tzImagePickerVc) {
-        self.navigationItem.title = tzImagePickerVc.previewBtnTitleStr;
-    }
+//    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
+//    if (tzImagePickerVc) {
+//        self.navigationItem.title = tzImagePickerVc.previewBtnTitleStr;
+//    }
+    self.navigationController.navigationBar.shadowImage = [UIImage new];
+
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.topItem.title = @"";
+    
+      UIButton *sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 64, 32)];
+         
+    [sureBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [sureBtn setTitle:@"确定" forState:UIControlStateSelected];
+    [sureBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [sureBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    sureBtn.layer.cornerRadius = 16;
+    sureBtn.layer.masksToBounds = YES;
+    sureBtn.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:14];
+    [sureBtn addTarget:self action:@selector(doneButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    sureBtn.backgroundColor = [UIColor colorWithRed:5/255.0 green:173/255.0 blue:101/255.0 alpha:1/1.0];
+    UIBarButtonItem *myButton = [[UIBarButtonItem alloc] initWithCustomView:sureBtn];;
+    self.navigationItem.rightBarButtonItem = myButton;
+    
     [self configMoviePlayer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pausePlayerAndShowNaviBar) name:UIApplicationWillResignActiveNotification object:nil];
 }
@@ -58,6 +78,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     if (self.needShowStatusBar) {
         [UIApplication sharedApplication].statusBarHidden = NO;
     }
@@ -102,9 +123,13 @@
 
 - (void)configPlayButton {
     _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
-    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlayHL"] forState:UIControlStateHighlighted];
+//    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
+//    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlayHL"] forState:UIControlStateHighlighted];
+    
     [_playButton addTarget:self action:@selector(playButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    _playBtnImage = [[UIImageView alloc] init];
+    _playBtnImage.image = [UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"];
+    [self.view addSubview:_playBtnImage];
     [self.view addSubview:_playButton];
 }
 
@@ -129,10 +154,10 @@
     }
     [_doneButton setTitleColor:tzImagePickerVc.oKButtonTitleColorDisabled forState:UIControlStateDisabled];
     [_toolBar addSubview:_doneButton];
-    [self.view addSubview:_toolBar];
+//    [self.view addSubview:_toolBar];
     
     if (tzImagePickerVc.videoPreviewPageUIConfigBlock) {
-        tzImagePickerVc.videoPreviewPageUIConfigBlock(_playButton, _toolBar, _doneButton);
+        tzImagePickerVc.videoPreviewPageUIConfigBlock(_playButton, _playBtnImage, _doneButton);
     }
 }
 
@@ -157,10 +182,11 @@
     _toolBar.frame = CGRectMake(0, self.view.tz_height - toolBarHeight, self.view.tz_width, toolBarHeight);
     _doneButton.frame = CGRectMake(self.view.tz_width - 44 - 12, 0, 44, 44);
     _playButton.frame = CGRectMake(0, statusBarAndNaviBarHeight, self.view.tz_width, self.view.tz_height - statusBarAndNaviBarHeight - toolBarHeight);
-    
+    _playBtnImage.frame = CGRectMake((self.view.tz_width - 50)/2, (self.view.tz_height - 50)/2, 50,50);
+  
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (tzImagePickerVc.videoPreviewPageDidLayoutSubviewsBlock) {
-        tzImagePickerVc.videoPreviewPageDidLayoutSubviewsBlock(_playButton, _toolBar, _doneButton);
+        tzImagePickerVc.videoPreviewPageDidLayoutSubviewsBlock(_playButton, _playBtnImage, _doneButton);
     }
 }
 
@@ -173,16 +199,18 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TZ_VIDEO_PLAY_NOTIFICATION" object:_player];
         if (currentTime.value == durationTime.value) [_player.currentItem seekToTime:CMTimeMake(0, 1)];
         [_player play];
-        [self.navigationController setNavigationBarHidden:YES];
-        _toolBar.hidden = YES;
-        [_playButton setImage:nil forState:UIControlStateNormal];
-        [UIApplication sharedApplication].statusBarHidden = YES;
+//        [self.navigationController setNavigationBarHidden:YES];
+//        _toolBar.hidden = YES;
+        _playBtnImage.image = [UIImage imageNamed:@""];
+//        [_playButton setImage:nil forState:UIControlStateNormal];
+//        [UIApplication sharedApplication].statusBarHidden = YES;
     } else {
         [self pausePlayerAndShowNaviBar];
     }
 }
 
 - (void)doneButtonClick {
+    
     if (self.navigationController) {
         TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
         if (imagePickerVc.autoDismiss) {
@@ -213,10 +241,10 @@
 
 - (void)pausePlayerAndShowNaviBar {
     [_player pause];
-    _toolBar.hidden = NO;
-    [self.navigationController setNavigationBarHidden:NO];
-    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
-    
+//    _toolBar.hidden = NO;
+//    [self.navigationController setNavigationBarHidden:NO];
+//    [_playButton setImage:[UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"] forState:UIControlStateNormal];
+    _playBtnImage.image = [UIImage tz_imageNamedFromMyBundle:@"MMVideoPreviewPlay"];
     if (self.needShowStatusBar) {
         [UIApplication sharedApplication].statusBarHidden = NO;
     }
